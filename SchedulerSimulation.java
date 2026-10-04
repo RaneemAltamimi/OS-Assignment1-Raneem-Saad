@@ -31,6 +31,9 @@ class Process implements Runnable {
     private int remainingTime; // Time left for the process to finish its execution
     // 1 Feature: Added a random priority level from 1 to 5 for each process
     private int priority;
+    // 3 Feature: Track process creation time and total waiting time
+    private long creationTime;
+    private long waitingTime;
 
     // Constructor to initialize the process with name, burst time, and time quantum
     /**
@@ -44,6 +47,10 @@ class Process implements Runnable {
         this.timeQuantum = timeQuantum;
         this.remainingTime = burstTime; // Initially, remaining time is equal to the burst time
         this.priority = 1 + new Random().nextInt(5); // feature 1: assign priority
+        this.creationTime = System.currentTimeMillis();// 3 Feature: Initialize process timing information for waiting
+                                                       // time tracking
+        this.waitingTime = 0;
+
     }
 
     // This method will be called when the thread for this process is started
@@ -80,6 +87,8 @@ class Process implements Runnable {
         }
 
         remainingTime -= runTime; // Deduct the run time from the remaining time
+        // 3 Feature:
+        waitingTime = System.currentTimeMillis() - creationTime;
         int overallProgress = (int) (((double) (burstTime - remainingTime) / burstTime) * 100);
         String overallProgressBar = createProgressBar(overallProgress, 20);
 
@@ -149,6 +158,11 @@ class Process implements Runnable {
     // Check if the process has finished (i.e., no remaining time)
     public boolean isFinished() {
         return remainingTime <= 0;
+    }
+
+    // 3 Feature: Provide access to the total waiting time
+    public long getWaitingTime() {
+        return waitingTime;
     }
 
     // 1 Feature: Added a getter to access the process priority
@@ -260,6 +274,8 @@ public class SchedulerSimulation {
             System.out.println(Colors.BOLD + Colors.MAGENTA + "└" + "─".repeat(79) + Colors.RESET + "\n");
 
             // Start the thread, which will run the process for one time quantum
+
+            contextSwitches++;
             currentThread.start();
 
             try {
@@ -304,6 +320,13 @@ public class SchedulerSimulation {
         // 2 Feature: Display the total number of context switches after simulation
         System.out.println(Colors.BRIGHT_YELLOW + "Total context switches: " +
                 contextSwitches + Colors.RESET + "\n");
+        System.out.println("\nProcess Summary:");
+        // 3 Feature :
+        for (Process p : processMap.values()) {
+            System.out.println(p.getName() +
+                    " | Burst: " + p.getBurstTime() +
+                    " | Waiting: " + p.getWaitingTime() + "ms");
+        }
     }
 
     // Method to add a process to the queue and map, while printing a "ready"
