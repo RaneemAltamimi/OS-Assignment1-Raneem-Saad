@@ -29,17 +29,25 @@
 
 | Field | Your Answer |
 |-------|-------------|
+<<<<<<< HEAD
 | **Full Name** | [Raneem saad aitamimi] |
 | **Student ID** | [445052093] |
 | **University Email** | 445052093@std.psau.edu.sa |
 | **GitHub Username** | [RaneemAltamimi] |
 | **Repository Link** | [Paste your repository link here] |
+=======
+| **Full Name** | [Raneem Saad Altamimi] |
+| **Student ID** | [445052093] |
+| **University Email** | 445052093@std.psau.edu.sa |
+| **GitHub Username** | [RaneemAltamimi] |
+| **Repository Link** | https://github.com/RaneemAltamimi/OS-Assignment1-Raneem-Saad.git |
+>>>>>>> 3774e341ee761f476c947167aeb7d9ad0bfe60fb
  
 ---
 
 ## 🎥 Video Link
 
-**Video Link**: [Paste your video link here]
+**Video Link**: https://drive.google.com/file/d/1JjtfMME-Tk-4XLVZ8s9f_6EDFXBpkIeu/view?usp=drivesdk
 
 > ⚠️ **WARNING:** The video must be **publicly accessible** ("Anyone with the link can view") on **Google Drive**, **YouTube (Unlisted or Public)** or any other cloud file-sharing system. A private, restricted or broken link counts as a **missing video (-1 mark)**.
 >
@@ -458,3 +466,4 @@ I need to study more about how real operating systems perform context switching 
 - [ ] Submit **only** the link to your public GitHub repository
 
 > 🎯 **Good luck!** Start early, commit regularly, and make sure you can explain every line you submit.
+

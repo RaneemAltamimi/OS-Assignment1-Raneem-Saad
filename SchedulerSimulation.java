@@ -35,6 +35,7 @@ class Process implements Runnable {
     // 3 Feature: Track process creation time and total waiting time
     private long creationTime;
     private long waitingTime;
+    private long lastWaitingStart;
 
     // Constructor to initialize the process with name, burst time, and time quantum
     /**
@@ -51,12 +52,15 @@ class Process implements Runnable {
         this.creationTime = System.currentTimeMillis();// 3 Feature: Initialize process timing information for waiting
                                                        // time tracking
         this.waitingTime = 0;
+        this.lastWaitingStart = this.creationTime;
 
     }
 
     // This method will be called when the thread for this process is started
     @Override
     public void run() {
+        long currentTime = System.currentTimeMillis();
+        waitingTime += currentTime - lastWaitingStart;
         // Simulate running for either the time quantum or remaining time, whichever is
         // smaller
         int runTime = Math.min(timeQuantum, remainingTime); // Run for the smaller of the two times
@@ -88,8 +92,7 @@ class Process implements Runnable {
         }
 
         remainingTime -= runTime; // Deduct the run time from the remaining time
-        // 3 Feature:
-        waitingTime = System.currentTimeMillis() - creationTime;
+
         int overallProgress = (int) (((double) (burstTime - remainingTime) / burstTime) * 100);
         String overallProgressBar = createProgressBar(overallProgress, 20);
 
@@ -164,6 +167,14 @@ class Process implements Runnable {
     // 3 Feature: Provide access to the total waiting time
     public long getWaitingTime() {
         return waitingTime;
+    }
+
+    public long getTurnaroundTime() {
+        return waitingTime + burstTime;
+    }
+
+    public void startWaiting() {
+        lastWaitingStart = System.currentTimeMillis();
     }
 
     // 1 Feature: Added a getter to access the process priority
@@ -323,17 +334,28 @@ public class SchedulerSimulation {
                 contextSwitches + Colors.RESET + "\n");
         System.out.println("\nProcess Summary:");
         // 3 Feature :
-        for (Process p : processMap.values()) {
-            System.out.println(p.getName() +
-                    " | Burst: " + p.getBurstTime() +
-                    " | Waiting: " + p.getWaitingTime() + "ms");
+
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.printf("%-15s %-15s %-20s %-20s%n",
+                "Process Name", "Burst Time", "Waiting Time", "Turnaround Time");
+        System.out.println("--------------------------------------------------------------------------");
+
+        for (Process p : new java.util.LinkedHashSet<>(processMap.values())) {
+            System.out.printf("%-15s %-15d %-20d %-20d%n",
+                    p.getName(),
+                    p.getBurstTime(),
+                    p.getWaitingTime(),
+                    p.getTurnaroundTime());
         }
+
+        System.out.println("--------------------------------------------------------------------------");
     }
 
     // Method to add a process to the queue and map, while printing a "ready"
     // message
     public static void addProcessToQueue(Process process, Queue<Thread> processQueue,
             Map<Thread, Process> processMap) {
+        process.startWaiting();
         // Create a new thread to run the process
         Thread thread = new Thread(process);
 
