@@ -1,3 +1,4 @@
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Map;
@@ -46,7 +47,7 @@ class Process implements Runnable {
         this.burstTime = burstTime;
         this.timeQuantum = timeQuantum;
         this.remainingTime = burstTime; // Initially, remaining time is equal to the burst time
-        this.priority = 1 + new Random().nextInt(5); // feature 1: assign priority
+        this.priority = 1 + new Random().nextInt(10); // feature 1: assign priority
         this.creationTime = System.currentTimeMillis();// 3 Feature: Initialize process timing information for waiting
                                                        // time tracking
         this.waitingTime = 0;
